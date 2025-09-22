@@ -8,33 +8,40 @@
                         <!-- Верхняя таблица с реквизитами -->
                         <table style="width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 20px;">
                             <tr>
-                                <td colspan="3" style="border: 1px solid black; padding: 5px;">ПАО "Сбербанк"</td>
-                                <td style="border: 1px solid black; padding: 5px; width: 12%;">БИК</td>
-                                <td style="border: 1px solid black; padding: 5px; width: 25%;"></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 40%;">ПАО "Сбербанк"</td>
+                                <td style="border: 1px solid black; padding: 5px; width: 15%;">БИК</td>
+                                <td style="border: 1px solid black; padding: 5px; width: 45%;"></td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="border: 1px solid black; padding: 5px;">Банк получателя</td>
+                                <td style="border: 1px solid black; padding: 5px; font-size: 5pt;">Банк получателя</td>
                                 <td style="border: 1px solid black; padding: 5px;">Сч.№</td>
                                 <td style="border: 1px solid black; padding: 5px;">123412341234000</td>
                             </tr>
                             <tr>
-                                <td style="border: 1px solid black; padding: 5px; width: 8%;">ИНН</td>
-                                <td style="border: 1px solid black; padding: 5px; width: 18%;">789654</td>
-                                <td style="border: 1px solid black; padding: 5px; width: 8%;">КПП</td>
-                                <td style="border: 1px solid black; padding: 5px; width: 18%;">789654</td>
-                                <td style="border: 1px solid black; padding: 5px;">Сч.№</td>
+                                <td style="border: 1px solid black; padding: 0;">
+                                    <table style="width: 100%; border-collapse: collapse; margin: 0;">
+                                        <tr>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 15%;">ИНН</td>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 35%;">789654</td>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 15%;">КПП</td>
+                                            <td style="padding: 5px; width: 35%;">789654</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td rowspan="3" style="border: 1px solid black; padding: 5px; vertical-align: top;">Сч.№</td>
+                                <td rowspan="3" style="border: 1px solid black; padding: 5px;"></td>
                             </tr>
                             <tr>
-                                <td colspan="5" style="border: 1px solid black; padding: 5px;">РФ Компания</td>
+                                <td style="border: 1px solid black; padding: 5px;">РФ Компания</td>
                             </tr>
                             <tr>
-                                <td colspan="5" style="border: 1px solid black; padding: 5px;">Получатель</td>
+                                <td style="border: 1px solid black; padding: 5px; font-size: 5pt;">Получатель</td>
                             </tr>
                         </table>
 
                         <!-- Заголовок -->
                         <div class="text-center" style="margin: 20px 0;">
-                            <h4>Счёт на оплату № <span t-field="o.name"/> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></h4>
+                            <h4>Счёт на оплату № <strong><span t-field="o.name"/></strong> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></h4>
                         </div>
 
                         <!-- Таблица поставщик/покупатель -->
@@ -57,13 +64,13 @@
                         <table style="width: 100%; font-size: 10pt; border-collapse: collapse;">
                             <thead>
                                 <tr style="background-color: #f0f0f0;">
-                                    <th style="border: 1px solid black; padding: 5px; width: 5%; text-align: center;">№</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 35%;">Товары (работы, услуги)</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center;">Кол-во</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center;">Ед.изм.</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 13%; text-align: right;">Цена, руб</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 12%; text-align: right;">НДС</th>
-                                    <th style="border: 1px solid black; padding: 5px; width: 15%; text-align: right;">Сумма, руб</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 5%; text-align: center; font-weight: bold;">№</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 35%; font-weight: bold;">Товары (работы, услуги)</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center; font-weight: bold;">Кол-во</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center; font-weight: bold;">Ед.изм.</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 13%; text-align: right; font-weight: bold;">Цена, руб</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 12%; text-align: right; font-weight: bold;">НДС</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 15%; text-align: right; font-weight: bold;">Сумма, руб</th>
                                 </tr>
                             </thead>
                             <tbody>
