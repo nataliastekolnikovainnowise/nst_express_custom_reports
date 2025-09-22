@@ -14,6 +14,7 @@
         # "reports/sale_report_data.xml",
         # "reports/sale_report_templates.xml",
         "reports/sale_report_payment.xml",
+        "reports/invoice_report.xml",
     ],
     "installable": True,
     "application": False,
