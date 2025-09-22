@@ -1,67 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_invoice_document" name="Invoice for Payment">
+    <template id="report_invoice_document" name="Payment Invoice">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <div class="text-center">
+                        <!-- Заголовок с номером и датой -->
+                        <div class="text-center mb-4">
                             <h3>Счёт на оплату № <span t-field="o.name"/> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></h3>
                         </div>
 
-                        <table class="table table-sm table-borderless mt-3">
-                            <tr>
-                                <td><strong>Поставщик:</strong></td>
-                                <td><span t-field="o.company_id.name"/></td>
-                            </tr>
-                        </table>
+                        <!-- Реквизиты поставщика (компании) -->
+                        <div class="mb-3">
+                            <strong>Поставщик:</strong>
+                            <div class="ms-3">
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div t-if="o.company_id.vat">ИНН: <span t-field="o.company_id.vat"/></div>
+                                <div t-if="o.company_id.company_registry">КПП: <span t-field="o.company_id.company_registry"/></div>
+                                <div t-if="o.company_id.partner_id.bank_ids">
+                                    <t t-foreach="o.company_id.partner_id.bank_ids[:1]" t-as="bank">
+                                        <div>Банк: <span t-field="bank.bank_id.name"/></div>
+                                        <div t-if="bank.bank_id.bic">БИК: <span t-field="bank.bank_id.bic"/></div>
+                                        <div>Счет №: <span t-field="bank.acc_number"/></div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
 
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td><strong>Покупатель:</strong></td>
-                                <td><span t-field="o.partner_id.name"/></td>
-                            </tr>
-                        </table>
+                        <!-- Реквизиты покупателя -->
+                        <div class="mb-3">
+                            <strong>Покупатель:</strong>
+                            <div class="ms-3">
+                                <div><span t-field="o.partner_id.name"/></div>
+                                <div t-if="o.partner_id.vat">ИНН: <span t-field="o.partner_id.vat"/></div>
+                                <div t-if="o.partner_id.ref">КПП: <span t-field="o.partner_id.ref"/></div>
+                                <div>Адрес: <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/></div>
+                            </div>
+                        </div>
 
+                        <!-- Таблица товаров -->
                         <table class="table table-sm table-bordered mt-4">
                             <thead>
                                 <tr>
-                                    <th>№</th>
-                                    <th>Товары (работы, услуги)</th>
-                                    <th>Кол-во</th>
-                                    <th>Ед.изм.</th>
-                                    <th class="text-end">Цена, руб</th>
-                                    <th class="text-end">НДС</th>
-                                    <th class="text-end">Сумма, руб</th>
+                                    <th style="width: 5%;">№</th>
+                                    <th style="width: 35%;">Товары (работы, услуги)</th>
+                                    <th style="width: 10%;" class="text-center">Кол-во</th>
+                                    <th style="width: 10%;" class="text-center">Ед.изм.</th>
+                                    <th style="width: 12%;" class="text-end">Цена, руб</th>
+                                    <th style="width: 13%;" class="text-end">НДС</th>
+                                    <th style="width: 15%;" class="text-end">Сумма, руб</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-set="line_num" t-value="0"/>
                                 <tr t-foreach="o.order_line" t-as="line">
                                     <t t-set="line_num" t-value="line_num + 1"/>
-                                    <td><span t-esc="line_num"/></td>
+                                    <td class="text-center"><span t-esc="line_num"/></td>
                                     <td><span t-field="line.product_id.name"/></td>
-                                    <td><span t-field="line.product_uom_qty"/></td>
-                                    <td><span t-field="line.product_uom.name"/></td>
-                                    <td class="text-end"><span t-field="line.price_unit"/></td>
+                                    <td class="text-center"><span t-field="line.product_uom_qty"/></td>
+                                    <td class="text-center"><span t-field="line.product_uom.name"/></td>
                                     <td class="text-end">
-                                        <span t-if="line.tax_id">
-                                            <t t-foreach="line.tax_id" t-as="tax">
-                                                <span t-esc="tax.name"/>
-                                            </t>
-                                        </span>
+                                        <span t-esc="'{:,.2f}'.format(line.price_unit)"/>
                                     </td>
-                                    <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                                    <td class="text-end">
+                                        <t t-if="line.tax_id">
+                                            <t t-foreach="line.tax_id" t-as="tax">
+                                                <span t-esc="tax.amount"/>%
+                                            </t>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="6" class="text-end"><strong>Итого:</strong></td>
-                                    <td class="text-end"><strong><span t-field="o.amount_untaxed"/></strong></td>
+                                    <td class="text-end">
+                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-end">
+                                        <strong>Сумма НДС
+                                            <t t-if="o.amount_tax > 0">
+                                                (<t t-foreach="o.order_line.tax_id" t-as="tax">
+                                                    <span t-esc="tax.amount"/>%
+                                                </t>)
+                                            </t>:
+                                        </strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_tax)"/></strong>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" class="text-end"><strong>Всего к оплате:</strong></td>
-                                    <td class="text-end"><strong><span t-field="o.amount_total"/></strong></td>
+                                    <td class="text-end">
+                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_total)"/></strong>
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -72,7 +111,7 @@
     </template>
 
     <record id="action_report_invoice_payment" model="ir.actions.report">
-        <field name="name">Invoice for Payment</field>
+        <field name="name">Payment Invoice</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nst_express_custom_reports.report_invoice_document</field>
