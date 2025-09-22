@@ -5,50 +5,79 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <!-- Заголовок с номером и датой -->
-                        <div class="text-center mb-4">
-                            <h3>Счёт на оплату № <span t-field="o.name"/> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></h3>
-                        </div>
-
-                        <!-- Реквизиты поставщика (компании) -->
-                        <div class="mb-3">
-                            <strong>Поставщик:</strong>
-                            <div class="ms-3">
-                                <div><span t-field="o.company_id.name"/></div>
-                                <div t-if="o.company_id.vat">ИНН: <span t-field="o.company_id.vat"/></div>
-                                <div t-if="o.company_id.company_registry">КПП: <span t-field="o.company_id.company_registry"/></div>
-                                <div t-if="o.company_id.partner_id.bank_ids">
-                                    <t t-foreach="o.company_id.partner_id.bank_ids[:1]" t-as="bank">
-                                        <div>Банк: <span t-field="bank.bank_id.name"/></div>
-                                        <div t-if="bank.bank_id.bic">БИК: <span t-field="bank.bank_id.bic"/></div>
-                                        <div>Счет №: <span t-field="bank.acc_number"/></div>
+                        <!-- Верхняя таблица с реквизитами компании -->
+                        <table class="table table-bordered mb-3" style="font-size: 11pt;">
+                            <tr>
+                                <td colspan="2"><strong><span t-field="o.company_id.name"/></strong></td>
+                                <td><strong>БИК</strong></td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Банк получателя</td>
+                                <td><strong>Сч.№</strong></td>
+                                <td colspan="2">
+                                    <t t-if="o.company_id.partner_id.bank_ids">
+                                        <t t-foreach="o.company_id.partner_id.bank_ids[:1]" t-as="bank">
+                                            <span t-field="bank.acc_number"/>
+                                        </t>
                                     </t>
-                                </div>
-                            </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>ИНН</strong></td>
+                                <td><span t-field="o.company_id.vat"/></td>
+                                <td><strong>КПП</strong></td>
+                                <td><span t-field="o.company_id.company_registry"/></td>
+                                <td><strong>Сч.№</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">РФ Компания</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">Получатель</td>
+                            </tr>
+                        </table>
+
+                        <!-- Заголовок -->
+                        <div class="text-center mb-4">
+                            <h4><strong>Счёт на оплату № <span t-field="o.name"/> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></strong></h4>
                         </div>
 
-                        <!-- Реквизиты покупателя -->
-                        <div class="mb-3">
-                            <strong>Покупатель:</strong>
-                            <div class="ms-3">
-                                <div><span t-field="o.partner_id.name"/></div>
-                                <div t-if="o.partner_id.vat">ИНН: <span t-field="o.partner_id.vat"/></div>
-                                <div t-if="o.partner_id.ref">КПП: <span t-field="o.partner_id.ref"/></div>
-                                <div>Адрес: <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/></div>
-                            </div>
-                        </div>
+                        <!-- Таблица поставщик/покупатель -->
+                        <table class="table table-bordered mb-3" style="font-size: 11pt;">
+                            <tr>
+                                <td style="width: 20%;"><strong>Поставщик</strong></td>
+                                <td>
+                                    <span t-field="o.company_id.name"/>, 
+                                    ИНН<span t-field="o.company_id.vat"/>, 
+                                    КПП<span t-field="o.company_id.company_registry"/>, 
+                                    АДРЕС: <span t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>, 
+                                    тел:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Покупатель</strong></td>
+                                <td>
+                                    <span t-field="o.partner_id.name"/>, 
+                                    <t t-if="o.partner_id.vat">ИНН<span t-field="o.partner_id.vat"/>, </t>
+                                    КПП, АДРЕС: 
+                                    <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>, 
+                                    тел:
+                                </td>
+                            </tr>
+                        </table>
 
-                        <!-- Таблица товаров -->
-                        <table class="table table-sm table-bordered mt-4">
+                        <!-- Основная таблица товаров -->
+                        <table class="table table-bordered" style="font-size: 11pt;">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">№</th>
-                                    <th style="width: 35%;">Товары (работы, услуги)</th>
-                                    <th style="width: 10%;" class="text-center">Кол-во</th>
-                                    <th style="width: 10%;" class="text-center">Ед.изм.</th>
-                                    <th style="width: 12%;" class="text-end">Цена, руб</th>
-                                    <th style="width: 13%;" class="text-end">НДС</th>
-                                    <th style="width: 15%;" class="text-end">Сумма, руб</th>
+                                    <th style="width: 5%;" class="text-center"><strong>№</strong></th>
+                                    <th style="width: 35%;"><strong>Товары (работы, услуги)</strong></th>
+                                    <th style="width: 10%;" class="text-center"><strong>Кол-во</strong></th>
+                                    <th style="width: 10%;" class="text-center"><strong>Ед.изм.</strong></th>
+                                    <th style="width: 13%;" class="text-end"><strong>Цена, руб</strong></th>
+                                    <th style="width: 12%;" class="text-end"><strong>НДС</strong></th>
+                                    <th style="width: 15%;" class="text-end"><strong>Сумма, руб</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,50 +86,37 @@
                                     <t t-set="line_num" t-value="line_num + 1"/>
                                     <td class="text-center"><span t-esc="line_num"/></td>
                                     <td><span t-field="line.product_id.name"/></td>
-                                    <td class="text-center"><span t-field="line.product_uom_qty"/></td>
-                                    <td class="text-center"><span t-field="line.product_uom.name"/></td>
-                                    <td class="text-end">
-                                        <span t-esc="'{:,.2f}'.format(line.price_unit)"/>
-                                    </td>
+                                    <td class="text-center"><span t-esc="'{:.1f}'.format(line.product_uom_qty)"/></td>
+                                    <td class="text-center">Шт.</td>
+                                    <td class="text-end"><span t-esc="'{:,.2f}'.format(line.price_unit)"/></td>
                                     <td class="text-end">
                                         <t t-if="line.tax_id">
-                                            <t t-foreach="line.tax_id" t-as="tax">
-                                                <span t-esc="tax.amount"/>%
+                                            <t t-foreach="line.tax_id[:1]" t-as="tax">
+                                                <span t-esc="int(tax.amount)"/>% НДС
                                             </t>
                                         </t>
-                                        <t t-else="">-</t>
                                     </td>
-                                    <td class="text-end">
-                                        <span t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
-                                    </td>
+                                    <td class="text-end"><span t-esc="'{:,.2f}'.format(line.price_subtotal)"/></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="6" class="text-end"><strong>Итого:</strong></td>
-                                    <td class="text-end">
-                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></strong>
-                                    </td>
+                                    <td class="text-end"><strong><span t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></strong></td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" class="text-end">
-                                        <strong>Сумма НДС
-                                            <t t-if="o.amount_tax > 0">
-                                                (<t t-foreach="o.order_line.tax_id" t-as="tax">
-                                                    <span t-esc="tax.amount"/>%
-                                                </t>)
-                                            </t>:
-                                        </strong>
+                                        <strong>Сумма НДС (<t t-if="o.order_line.tax_id">
+                                            <t t-foreach="o.order_line.tax_id[:1]" t-as="tax">
+                                                <span t-esc="int(tax.amount)"/>
+                                            </t>
+                                        </t>%):</strong>
                                     </td>
-                                    <td class="text-end">
-                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_tax)"/></strong>
-                                    </td>
+                                    <td class="text-end"><strong><span t-esc="'{:,.2f}'.format(o.amount_tax)"/></strong></td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" class="text-end"><strong>Всего к оплате:</strong></td>
-                                    <td class="text-end">
-                                        <strong><span t-esc="'{:,.2f}'.format(o.amount_total)"/></strong>
-                                    </td>
+                                    <td class="text-end"><strong><span t-esc="'{:,.2f}'.format(o.amount_total)"/></strong></td>
                                 </tr>
                             </tfoot>
                         </table>
