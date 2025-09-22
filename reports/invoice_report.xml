@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" name="Proposal">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Верхняя таблица с реквизитами -->
+                        <table style="width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 40%;">ПАО "Сбербанк"</td>
+                                <td style="border: 1px solid black; padding: 5px; width: 15%;">БИК</td>
+                                <td style="border: 1px solid black; padding: 5px; width: 45%;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; font-size: 5pt;">Банк получателя</td>
+                                <td style="border: 1px solid black; padding: 5px;">Сч.№</td>
+                                <td style="border: 1px solid black; padding: 5px;">123412341234000</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 0;">
+                                    <table style="width: 100%; border-collapse: collapse; margin: 0;">
+                                        <tr>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 15%;">ИНН</td>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 35%;">789654</td>
+                                            <td style="border-right: 1px solid black; padding: 5px; width: 15%;">КПП</td>
+                                            <td style="padding: 5px; width: 35%;">789654</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td rowspan="3" style="border: 1px solid black; padding: 5px; vertical-align: top;">Сч.№</td>
+                                <td rowspan="3" style="border: 1px solid black; padding: 5px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px;">РФ Компания</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; font-size: 5pt;">Получатель</td>
+                            </tr>
+                        </table>
+
+                        <!-- Заголовок -->
+                        <div class="text-center" style="margin: 20px 0;">
+                            <h4>Счёт на оплату № <strong><span t-field="o.name"/></strong> от <span t-field="o.date_order" t-options='{"format": "dd.MM.yyyy"}'/></h4>
+                        </div>
+
+                        <!-- Таблица поставщик/покупатель -->
+                        <table style="width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 15%;">Поставщик</td>
+                                <td style="border: 1px solid black; padding: 5px;">
+                                    РФ Компания, ИНН789654, КПП789654, АДРЕС: Российская Федерация ..., тел.:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px;">Покупатель</td>
+                                <td style="border: 1px solid black; padding: 5px;">
+                                    <span t-field="o.partner_id.name"/>, ИНН123, КПП, АДРЕС: ..., тел.:
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Основная таблица товаров -->
+                        <table style="width: 100%; font-size: 10pt; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #f0f0f0;">
+                                    <th style="border: 1px solid black; padding: 5px; width: 5%; text-align: center; font-weight: bold;">№</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 35%; font-weight: bold;">Товары (работы, услуги)</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center; font-weight: bold;">Кол-во</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 10%; text-align: center; font-weight: bold;">Ед.изм.</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 13%; text-align: right; font-weight: bold;">Цена, руб</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 12%; text-align: right; font-weight: bold;">НДС</th>
+                                    <th style="border: 1px solid black; padding: 5px; width: 15%; text-align: right; font-weight: bold;">Сумма, руб</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="line_num" t-value="0"/>
+                                <tr t-foreach="o.order_line" t-as="line">
+                                    <t t-set="line_num" t-value="line_num + 1"/>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: center;"><span t-esc="line_num"/></td>
+                                    <td style="border: 1px solid black; padding: 5px;"><span t-field="line.product_id.name"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: center;"><span t-esc="'{:.1f}'.format(line.product_uom_qty)"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: center;">Шт.</td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-esc="'{:,.2f}'.format(line.price_unit)"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;">
+                                        <t t-if="line.tax_id">
+                                            <t t-foreach="line.tax_id[:1]" t-as="tax">
+                                                <span t-esc="int(tax.amount)"/>% НДС
+                                            </t>
+                                        </t>
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-esc="'{:,.2f}'.format(line.price_subtotal)"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6" style="border: 1px solid black; padding: 5px; text-align: right;">Итого:</td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="border: 1px solid black; padding: 5px; text-align: right;">
+                                        Сумма НДС (<t t-if="o.order_line.tax_id">
+                                            <t t-foreach="o.order_line.tax_id[:1]" t-as="tax">
+                                                <span t-esc="int(tax.amount)"/>
+                                            </t>
+                                        </t> %):
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-esc="'{:,.2f}'.format(o.amount_tax)"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="border: 1px solid black; padding: 5px; text-align: right;">Всего к оплате:</td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-esc="'{:,.2f}'.format(o.amount_total)"/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_invoice_payment" model="ir.actions.report">
+        <field name="name">Proposal</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nst_express_custom_reports.report_invoice_document</field>
+        <field name="report_file">nst_express_custom_reports.report_invoice_document</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Invoice_%s' % (object.name)</field>
+    </record>
+</odoo>

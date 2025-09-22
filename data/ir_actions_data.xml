@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Примеры различных типов ir.actions -->
+    
+    <!-- 1. ir.actions.act_window - Окно для просмотра заказов с экспресс доставкой -->
+    <record id="action_sale_express_orders" model="ir.actions.act_window">
+        <field name="name">Express Sales Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('order_line.is_express', '=', True)]</field>
+        <field name="context">{}</field>
+        <field name="help">Orders with express delivery items</field>
+    </record>
+
+    <!-- 2. ir.actions.server - Серверное действие для массового обновления -->
+    <record id="action_server_mark_express" model="ir.actions.server">
+        <field name="name">Mark as Express Delivery</field>
+        <field name="model_id" ref="sale.model_sale_order_line"/>
+        <field name="binding_model_id" ref="sale.model_sale_order_line"/>
+        <field name="state">code</field>
+        <field name="code">
+records.write({'is_express': True})
+        </field>
+    </record>
+
+    <!-- 3. ir.actions.act_url - URL действие для открытия документации -->
+    <record id="action_url_express_docs" model="ir.actions.act_url">
+        <field name="name">Express Delivery Documentation</field>
+        <field name="url">https://www.odoo.com/documentation</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- 4. ir.actions.client - Клиентское действие -->
+    <record id="action_client_express_dashboard" model="ir.actions.client">
+        <field name="name">Express Delivery Dashboard</field>
+        <field name="tag">express_delivery_dashboard</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Добавляем пункт меню для демонстрации действий -->
+    <menuitem id="menu_express_delivery_demo" 
+              name="Express Delivery Demo" 
+              parent="sale.sale_menu_root" 
+              sequence="50"/>
+              
+    <menuitem id="menu_express_orders" 
+              name="Express Orders" 
+              parent="menu_express_delivery_demo" 
+              action="action_sale_express_orders" 
+              sequence="10"/>
+</odoo>

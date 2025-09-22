@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="nst_delivery_express.list">
+      <field name="name">nst_delivery_express list</field>
+      <field name="model">nst_delivery_express.nst_delivery_express</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="nst_delivery_express.action_window">
+      <field name="name">nst_delivery_express window</field>
+      <field name="res_model">nst_delivery_express.nst_delivery_express</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="nst_delivery_express.action_server">
+      <field name="name">nst_delivery_express server</field>
+      <field name="model_id" ref="model_nst_delivery_express_nst_delivery_express"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="nst_delivery_express" id="nst_delivery_express.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="nst_delivery_express.menu_1" parent="nst_delivery_express.menu_root"/>
+    <menuitem name="Menu 2" id="nst_delivery_express.menu_2" parent="nst_delivery_express.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="nst_delivery_express.menu_1_list" parent="nst_delivery_express.menu_1"
+              action="nst_delivery_express.action_window"/>
+    <menuitem name="Server to list" id="nst_delivery_express" parent="nst_delivery_express.menu_2"
+              action="nst_delivery_express.action_server"/>
+-->
+  </data>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Отдельный QWeb-шаблон -->
+    <template id="report_quotation_express_template" name="Quotation / Order (Express)">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Quotation / Order (Express)</h2>
+                        <p><strong>Order:</strong> <span t-field="doc.name"/></p>
+                        <p><strong>Customer:</strong> <span t-field="doc.partner_id.name"/></p>
+
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Express Delivery</th>
+                                    <th>Express Picking</th>
+                                    <th class="text-end">Qty</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.order_line" t-as="line">
+                                    <td><span t-field="line.product_id.display_name"/></td>
+                                    <td><span t-if="line.is_express">✓</span></td>
+                                    <td>
+                                        <span t-if="line.move_ids and line.move_ids[0].picking_id"
+                                              t-esc="line.move_ids[0].picking_id.name"/>
+                                    </td>
+                                    <td class="text-end"><span t-field="line.product_uom_qty"/></td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                                    <td class="text-end">
+                                        <span t-field="doc.amount_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
