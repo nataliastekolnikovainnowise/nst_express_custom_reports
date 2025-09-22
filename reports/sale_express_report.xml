@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Шаблон отчета Quotation/Order (Express) -->
+    <template id="report_quotation_order_express" name="Quotation/Order (Express)">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Заголовок -->
+                        <h2 style="color: #875A7B;">Quotation / Order (Express)</h2>
+                        
+                        <!-- Информация о заказе -->
+                        <div class="row mt-3 mb-3">
+                            <div class="col-12">
+                                <p><strong>Order:</strong> <span t-field="o.name"/></p>
+                                <p><strong>Customer:</strong> <span t-field="o.partner_id.name"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Таблица товаров -->
+                        <table class="table table-sm o_main_table" style="margin-top: 20px;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #dee2e6;">
+                                    <th>Product</th>
+                                    <th class="text-center">Express Delivery</th>
+                                    <th>Express Picking</th>
+                                    <th class="text-end">Qty</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.order_line" t-as="line">
+                                    <td>
+                                        <span t-field="line.product_id.display_name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="line.is_express">✓</span>
+                                    </td>
+                                    <td>
+                                        <t t-if="line.move_ids">
+                                            <t t-foreach="line.move_ids" t-as="move">
+                                                <span t-if="move.picking_id" t-esc="move.picking_id.name"/>
+                                            </t>
+                                        </t>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.product_uom_qty"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Итого -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h3><strong>Total: <span t-field="o.amount_total"/></strong></h3>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Регистрация отчета -->
+    <record id="action_report_quotation_order_express" model="ir.actions.report">
+        <field name="name">Quotation / Order (Express)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nst_express_custom_reports.report_quotation_order_express</field>
+        <field name="report_file">nst_express_custom_reports.report_quotation_order_express</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Quotation_Express_%s' % (object.name)</field>
+    </record>
+</odoo>

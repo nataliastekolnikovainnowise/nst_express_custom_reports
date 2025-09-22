@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Действие отчёта -->
+    <report
+        id="action_report_quotation_express"
+        model="sale.order"
+        string="Quotation / Order (Express)"
+        report_type="qweb-pdf"
+        name="nst_express_custom_reports.report_quotation_express_v2"
+        file="nst_express_custom_reports.report_quotation_express_v2"
+        print_report_name="'Quotation_Express_' + object.name"
+    />
+</odoo>

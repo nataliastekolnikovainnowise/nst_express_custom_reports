@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template for Payment Order -->
+    <template id="report_payment_order_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Payment Order – <span t-esc="o.name"/></h2>
+
+                    <p><strong>Order:</strong> <span t-esc="o.name"/></p>
+                    <p><strong>Company:</strong> <span t-esc="o.company_id.name"/></p>
+                    <p><strong>ИНН/КПП:</strong>
+                        <span t-esc="o.company_id.partner_id.vat or ''"/>
+                    </p>
+                    <p><strong>Банк:</strong>
+                        <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].bank_id.name or ''"/>
+                    </p>
+                    <p><strong>БИК:</strong>
+                        <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].bic or ''"/>
+                    </p>
+                    <p><strong>Р/с:</strong>
+                        <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].acc_number or ''"/>
+                    </p>
+
+                    <br/>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.order_line" t-as="line">
+                                <td><span t-field="line.product_id"/></td>
+                                <td><span t-field="line.product_uom_qty"/></td>
+                                <td><span t-field="line.price_unit"/></td>
+                                <td><span t-field="line.price_subtotal"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Total: <span t-field="o.amount_total"/></h3>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
